@@ -32,7 +32,7 @@ public class Connexionsgbd {
             //requetesbd.nbemp(conn);
             //requetesbd.employes(conn);
             //requetesbd.requete1(conn);
-            CreationSeminaire.Seminaire(conn);
+            CreationSeminaireComplet.InfoSeminaire(conn);
             
             // Print information about connection warnings
             SQLWarningsExceptions.printWarnings(conn);
