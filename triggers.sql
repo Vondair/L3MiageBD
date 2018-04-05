@@ -12,159 +12,205 @@ Triggers :
 -- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
--- 1/ Pour un séminaire il y a 1 pause par demi journée
-
-
-CREATE OR REPLACE TRIGGER contrainte_1
-BEFORE insert or update on Seminaire
-for each row
-DECLARE
-nbpause integer;
-BEGIN
-	if (( typeSeminaire == ‘journee’) && (nbpause != 2) )
-		then raise_application_error(-20100,'Le nombre de pauses n’est pas le bon, il en faut 2');
-elseif ( (typeSeminaire == ‘demi_journee’) && (nbpause != 1))
-		then raise_application_error(-20100,'Le nombre de pauses n’est pas le bon, il en faut 1');
-	end if;
-EXCEPTION
-	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
-END ;
-
--- 2/ (Un séminaire est créé si on a 3 activités au moins, les activités sont créées si on a un séminaire)
+-- 1/ (Un séminaire est créé si on a 3 activités au moins, les activités sont créées si on a un séminaire)
 -- Pour un séminaire il peut y avoir 3 (demi -journée) ou 6 (journée) activités
 
-CREATE OR REPLACE TRIGGER contrainte_2
+CREATE OR REPLACE TRIGGER 3Ou6ActivitesparSeminaire
 BEFORE insert or update on Activite
 For each row
 DECLARE
 VnbActivite integer;
 BEGIN 
-	select idActivite, count(idActivite) into VnbActivite
+	select idActivite, count(idActivite) into VnbActivite, typeSeminaire into VtypeSeminaire
 	from Activite A join Seminaire S on (A.idSeminaire = S.idSeminaire)
 	group by idActivite ;
 
-if (( typeSeminaire == ‘demi_journee’) && (VnbActivite !=3))
+if (( typeSeminaire = 'demi_journee') AND (VnbActivite <> 3))
 		then raise_application_error(-20100,'Il y a un probleme au niveau du nombre d’activites (3 activites pour un seminaire d’une demi-journee)'); 
-elseif (( typeSeminaire == ‘journee’) && (VnbActivite !=6))
+elseif (( typeSeminaire = 'journee') AND (VnbActivite <> 6))
 		then raise_application_error(-20100,'Il y a un probleme au niveau du nombre d’activites (6 activites pour un seminaire d’une journee)'); 
-
 	end if;
 EXCEPTION
 	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
 END ;
 
 ---------------------------------------------------------------------------------------------------------------------------
--- 3/ Un déjeuner est obligatoirement prévu si un séminaire dure toute la journée
+-- 2/ Un déjeuner est obligatoirement prévu si un séminaire dure toute la journée
 
-CREATE OR REPLACE TRIGGER contrainte_3
+CREATE OR REPLACE TRIGGER dejeunerSiJournee
 BEFORE insert or update on Seminaire
-DECLARE
 BEGIN
-if(typeSeminaire == ‘journee’ AND  repas == False) then       
-raise_application_error(-20100,'Un déjeuner est obligatoirement prévu si le séminaire dure une journée entière');
-end if;
+	if(typeSeminaire = 'journee' AND repas = 0) then       
+		raise_application_error(-20100,'Un déjeuner est obligatoirement prévu si le séminaire dure une journée entière');
+	end if;
 EXCEPTION
 	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
 END; 
 
 ---------------------------------------------------------------------------------------------------------------------------
--- 4/ Si une personne s’inscrit alors que le nombre maximum de participant est atteint alors il va dans la liste d’attente
+-- 3/ Si une personne s’inscrit alors que le nombre maximum de participant est atteint alors il va dans la liste d’attente
 
-CREATE OR REPLACE TRIGGER contrainte_4
+CREATE OR REPLACE TRIGGER listeAttenteSiComplet
 AFTER insert on Participant
 DECLARE
-VnbParticipants integer;
-VnbMax integer;
+	VnbParticipants integer;
 BEGIN
-	select nbMax into VnbMax, count(idParticipant) into VnbParticipants
+	select nbMax, count(idParticipant) into VnbParticipants
 	from Participant join Seminaire S on P.idSeminaire = S.idSeminaire
-where idParticipant = :NEW.idParticipant;
+	where idParticipant = :NEW.idParticipant;
 	
-	if(VnbParticipant = VnbMax) then
+	if(VnbParticipant = nbMax) then
 		update Participant
 		set estEnAttente = 1
 		where idParticipant = :NEW.idParticipant;
-	endif;
+	end if;
 EXCEPTION
 	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
 END;
 
-
 ---------------------------------------------------------------------------------------------------------------------------
-5/
-L’entreprise ne peut organiser plus de 3 séminaires par jour
+-- 4/ check si on a le nbMax de participant
+-- (estEnAttente = 0 ou 1 )
+-- si on a quelqu’un dans la liste d’attente, il prend la place de celui qui annule
+-- si on a personne dans la liste d’attente, on met le dernier participant du séminaire à la place de celui qui a annulé pour avoir le nombre de participants toujours à jour
+-- prendre date la plus petite de la liste d’attente pour savoir qui va participer
 
-CREATE OR REPLACE TRIGGER contrainte_5
-BEFORE insert or update on Seminaire
-for each row
-DECLARE
-dateS date;
-BEGIN
-	if (:new.dateS < add_months(sysdate,1))
-		then raise_application_error(-20100,'Un séminaire doit être créé 1 mois avant la date prévue !');
-	end if;
-EXCEPTION
-	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
-END ;
-/
+-- Si un participant se désiste, le premier de la liste d’attente passe en participant
 
-
-
----------------------------------------------------------------------------------------------------------------------------
-6/
-Un séminaire ne peut être créé si la date du séminaire est inférieur à 1 mois après la date actuelle
-
-CREATE OR REPLACE TRIGGER contrainte_7
-BEFORE insert or update on Seminaire
-for each row
-DECLARE
-dateS date;
-BEGIN
-	if (:new.dateS < add_months(sysdate,1))
-		then raise_application_error(-20100,'Un séminaire doit être créé 1 mois avant la date prévue !');
-	end if;
-EXCEPTION
-	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
-END ;
-/
-
-
----------------------------------------------------------------------------------------------------------------------------
-7/ 
-check si on a le nbMax de participant
-(estEnAttente = 0 ou 1 )
-si on a quelqu’un dans la liste d’attente, il prend la place de celui qui annule
-si on a personne dans la liste d’attente, on met le dernier participant du séminaire à la place de celui qui a annulé pour avoir le nombre de participants toujours à jour
-prendre date la plus petite de la liste d’attente pour savoir qui va participer
-
-Si un participant se désiste, le premier de la liste d’attente passe en participant
-
-CREATE OR REPLACE TRIGGER contrainte_7
+CREATE OR REPLACE TRIGGER desistement
 AFTER delete on Participant
 for each row
 DECLARE
-VidParticipant integer;
+VidPremierEnAttente integer;
+VnbEnAttente integer;
 BEGIN
-select estEnAttente, idParticipant into VidParticipant
+	select count(idParticipant) into VnbEnAttente
 	from Participant
-	where dateInscription = (select min(dateInscription)
-					from Participant
-					where estEnAttente = 1)
-	and estEnAttente = 1);
+	where estEnAttente = 1;
 
-	update Participant
-	set estEnAttente = 0
-	where idParticipant = VidParticipant;
-
+	if (VnbEnAttente > 0) then
+		select idParticipant into VidPremierEnAttente
+			from Participant
+			where dateInscription = (select min(dateInscription)
+										from Participant
+										where estEnAttente = 1)
+			and estEnAttente = 1);
+			
+		update Participant
+		set estEnAttente = 0
+		where idParticipant = VidPremierEnAttente;
+	end if;
 EXCEPTION
 	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
 END ;
-/
-
 
 ---------------------------------------------------------------------------------------------------------------------------
-8/ 
 
+-- 5/Il ne peut pas y avoir plus de 3 séminaires le même jour
+CREATE OR REPLACE TRIGGER 3seminairesMaxParJour
+BEFORE insert on Seminaire
+For each row
+DECLARE
+	VnbSeminairesPourLaDate integer;
+BEGIN
+	select count(idSeminaire) into VnbSeminairesPourLaDate
+	from Seminaire
+	where dateSeminaire = :NEW.dateSeminaire;
+
+	if (VnbSeminairesPourLaDate = 3) then
+		raise_application_error(-20100,'Il ne peut pas y avoir plus de trois seminaires le meme jour');
+	end if;
+EXCEPTION
+	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
+END;
+
+-- 6/Le nombre de participants doit être fixé 1 semaine avant un séminaire
+CREATE OR REPLACE TRIGGER participantsFixes1SemaineAvantSeminaire
+BEFORE insert on Participant
+For each row
+DECLARE
+	VdateSeminaire;
+BEGIN
+	select idParticipant, dateSeminaire into VdateSeminaire
+	from Participant P join Seminaire S on (P.idSeminaire = S.idSeminaire);
+
+	if (:NEW.dateInscription < VdateSeminaire - 7) then
+		raise_application_error(-20100, 'Le nombre de participants pour un seminaire est fixe une semaine avant la date de debut de ce dernier');
+	end if;
+EXCEPTION
+	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
+END;
+
+-- 7/Il n'y a qu'un seul prestataire par séminaire
+CREATE OR REPLACE TRIGGER 1PrestataireParSeminaire
+BEFORE insert on Prestataire
+For each row
+DECLARE
+	VnbPrestatairesPourUnSeminaire integer;
+BEGIN
+	select count(idPrestataire) into VnbPrestatairesPourUnSeminaire
+	from Prestataire
+	where idSeminaire = :NEW.idSeminaire;
+
+	if (VnbPrestatairesPourUnSeminaire = 1) then
+		raise_application_error(-20100, 'Il ne peut y avoir qu\'un seul prestataire par seminaire');
+	end if;
+EXCEPTION
+	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
+END;
+
+-- 8/Deux séminaires qui se déroulent le même jour ne peuvent pas avoir le même prestataire
+CREATE OR REPLACE TRIGGER 2SeminairesMemeJour2PrestatiresDifferents
+BEFORE insert on Prestataire
+For each row
+DECLARE 
+	VidPrestataire integer;
+BEGIN
+	select idPrestataire into VidPrestataire
+	from Prestataire
+	where :NEW.idSeminaire in (select S1.idSeminaire
+								from Seminaire S1 join Seminaire S2 on (S1.idSeminaire <> S2.idSeminaire)
+								where S1.dateSeminaire = S2.dateSeminaire);
+
+	if (VidPrestataire <> NULL) then
+		raise_application_error(-20100, 'Deux seminaires qui se deroulent le meme jour ne peuvent pas faire appel au meme prestataire');
+	end if;
+EXCEPTION
+	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
+END;
+
+-- 9/Les inscriptions pour un séminaire ouvrent 1 mois avant la date de celui-ci
+CREATE OR REPLACE TRIGGER ouvertureInscriptions1MoisAvant
+BEFORE insert on Participant
+For each row
+DECLARE
+VdateSeminairePourLequelOnSinscrit integer;
+
+BEGIN
+	select distinct dateSeminaire into VdateSeminairePourLequelOnSinscrit
+	from Participant P join Seminaire S on (P.)
+
+
+	
+	if (:NEW.dateInscription > ADD_M)
+
+
+-- 10/ Si le nombre max de participants n'est pas atteint, toute inscription se fait en tant que participant.
+CREATE OR REPLACE TRIGGER participantSiPasNbMax
+BEFORE insert on Participant
+For each row
+DECLARE
+	VnbParticipants integer;
+BEGIN
+	select nvl(count(idParticipant), 0) into VnbParticipants
+	from Participant
+	where estEnAttente = 0;
+
+	if (VnbParticipants < nbMax) then
+		update Participant
+			set estEnAttente = 0
+			where idParticipant = :NEW.idParticipant;
+	end if;
+EXCEPTION
+	when others then DBMS_OUTPUT.PUT_LINE('OK');
+END;
