@@ -4,14 +4,12 @@ create table Entreprise (
         nomEntreprise varchar(20),
         numeroEntreprise integer,
         rueEntreprise varchar(50),
-        codePostalEntreprise varchar(5),
+        codePostalEntreprise number(5),
         villeEntreprise varchar(20),
-        telephoneEntreprise varchar(10),
+        telephoneEntreprise number(10),
         mailEntreprise varchar(50),
         PRIMARY KEY (idEntreprise),
-        CONSTRAINT idEntrepriseSup0Entreprise CHECK (idEntreprise > 0),
-        CONSTRAINT checkCPEntreprise CHECK (codePostalEntreprise like '[0-9][0-9][0-9][0-9][0-9]'),
-        CONSTRAINT checkTelEntreprise CHECK (telephoneEntreprise like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+        CONSTRAINT idEntrepriseSup0Entreprise CHECK (idEntreprise > 0)
 );
 
 -- La relation Entreprise est en 3FN car : 
@@ -32,7 +30,7 @@ create table Seminaire (
         PRIMARY KEY (idSeminaire),
         FOREIGN KEY (idEntreprise) REFERENCES Entreprise(idEntreprise),
         CONSTRAINT idSeminaireSup0Seminaire CHECK (idSeminaire > 0),
-		CONSTRAINT checkrepas CHECK (repas IN (1,0)),
+	CONSTRAINT checkrepas CHECK (repas IN (1,0)),
         CONSTRAINT idEntrepriseSup0Seminaire CHECK (idEntreprise > 0),
         CONSTRAINT checkTypeSeminaire CHECK (typeSeminaire IN ('journee', 'demi_journee')),
         CONSTRAINT prixSeminaireSup0 CHECK (prixSeminaire > 0),
@@ -52,8 +50,14 @@ create table Prestataire (
         prixRepas integer NOT NULL,
         prixPause integer NOT NULL,
         prixSalle integer NOT NULL,
+        mailPrestataire varchar(50) NOT NULL,
+        numeroPrestataire integer NOT NULL,
+        ruePrestataire varchar(50) NOT NULL,
+        codePostalPrestataire number(5) NOT NULL,
+        villePrestataire varchar(20) NOT NULL,
+        telephonePrestataire number(10) NOT NULL,
         PRIMARY KEY (idPrestataire),
-		FOREIGN KEY (idSeminaire) REFERENCES Seminaire(idSeminaire),
+        FOREIGN KEY (idSeminaire) REFERENCES Seminaire(idSeminaire),
         CONSTRAINT idPrestataireSup0 CHECK (idPrestataire > 0),
         CONSTRAINT idSeminaireSup0Prestataire CHECK (idSeminaire > 0),
         CONSTRAINT prixRepasSup0 CHECK (prixRepas > 0),
@@ -92,17 +96,15 @@ create table Participant (
         mailParticipant varchar(50) NOT NULL,
         numeroParticipant integer,
         rueParticipant varchar(50),
-        codePostalParticipant char(5),
+        codePostalParticipant number(5),
         villeParticipant varchar(20),
-        telephoneParticipant char(10),
+        telephoneParticipant number(10),
         estEnAttente number(1) NOT NULL,
         PRIMARY KEY (idParticipant),
         FOREIGN KEY(idSeminaire) REFERENCES Seminaire(idSeminaire),
-		CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
-		CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
-        CONSTRAINT idSeminaireSup0Participant CHECK (idSeminaire > 0),
-        CONSTRAINT checkCPParticipant CHECK (codePostalParticipant like '[0-9][0-9][0-9][0-9][0-9]'),
-        CONSTRAINT checkTelParticipant CHECK (telephoneParticipant like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+	CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
+	CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
+        CONSTRAINT idSeminaireSup0Participant CHECK (idSeminaire > 0)
 );
 
 -- La relation Participant est en 3FN  car : 
@@ -119,17 +121,15 @@ create table Conferencier (
         mailConferencier varchar(50) NOT NULL,
         numeroConferencier integer,
         rueConferencier varchar(50),
-        codePostalConferencier char(5),
+        codePostalConferencier number(5),
         villeConferencier varchar(20),
-        telephoneConferencier char(10),
+        telephoneConferencier number(10),
         titreConference varchar(30) NOT NULL,
         dateRemiseTransparents date NOT NULL,
         PRIMARY KEY (idConferencier),
         FOREIGN KEY (idActivite) REFERENCES Activite(idActivite),
         CONSTRAINT idConferencierSup0 CHECK (idConferencier > 0),
-        CONSTRAINT idActiviteSup0Conferencier CHECK (idActivite > 0),
-        CONSTRAINT checkCPConferencier CHECK (codePostalConferencier like '[0-9][0-9][0-9][0-9][0-9]'),
-        CONSTRAINT checkTelConferencier CHECK (telephoneConferencier like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+        CONSTRAINT idActiviteSup0Conferencier CHECK (idActivite > 0)
 );
 
 -- La relation Conferencier est en 3FN  car : 
@@ -146,21 +146,16 @@ create table Animateur (
         mailAnimateur varchar(50) NOT NULL,
         numeroAnimateur integer,
         rueAnimateur varchar(50),
-        codePostalAnimateur char(5),
+        codePostalAnimateur number(5),
         villeAnimateur varchar(20),
-        telephoneAnimateur char(10),
+        telephoneAnimateur number(10),
         PRIMARY KEY (idAnimateur),
         FOREIGN KEY(idSeminaire) REFERENCES Seminaire(idSeminaire),
         CONSTRAINT idAnimateurSup0 CHECK (idAnimateur > 0),
-        CONSTRAINT idSeminaireSup0Animateur CHECK (idSeminaire > 0),
-        CONSTRAINT checkCPAnimateur CHECK (codePostalAnimateur like '[0-9][0-9][0-9][0-9][0-9]'),
-        CONSTRAINT checkTelAnimateur CHECK (telephoneAnimateur like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+        CONSTRAINT idSeminaireSup0Animateur CHECK (idSeminaire > 0)
 );
 
 -- La relation Animateur est en 3FN  car : 
 --         - Les données sont atomiques d'où la 1FN.
 --        - La relation est en 1FN et les attributs non-clé dépendent de toute la clé d'où la 2FN
 --        - La relation est en 2FN et  les attributs non clés ne dépendent pas d'autres attributs non clé d'où la 3FN
-
-
-
