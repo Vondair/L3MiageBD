@@ -24,7 +24,7 @@ create table Seminaire (
         theme varchar(30) NOT NULL,
         dateSeminaire date NOT NULL,
         nbMax integer NOT NULL,
-        prixSeminaire float NOT NULL,
+        prixSeminaire integer NOT NULL,
         typeSeminaire number (1) NOT NULL, 
         repas number(1) NOT NULL,
         PRIMARY KEY (idSeminaire),
