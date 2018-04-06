@@ -31,24 +31,29 @@ public class CreationSeminaireComplet {
 	
 	public static void CreationSeminaire(Connection conn, int idSeminaire, int idEntreprise, int nbMax, int repas, int prixSeminaire, String theme, int typeSeminaire, String dateSeminaire ) throws SQLException {
 
+		System.out.println("fonction");
 		try {
 			 // Get a statement from the connection
 	        Statement stmt = conn.createStatement() ;
+			System.out.println("1");
+
 			
 			//commande
             String s = "INSERT INTO Seminaire VALUES (" + idSeminaire + "," + idEntreprise + "," + "'" + theme + "'" + "," + "to_date('" + dateSeminaire + "' ,'yyyy-MM-dd hh:mi:ss')" + "," + nbMax + "," + prixSeminaire + "," + typeSeminaire + "," + repas + ")";
+    		System.out.println(s);
+
             // execution de la commande + r�cup�ratino du r�sultat
             int res = stmt.executeUpdate(s);
             
-            
+    		System.out.println("2");
+
             // commentaire si tout c'est bien pass�
             System.out.println(s);
             System.out.println("Insertion du s�minaire, " + res + "ligne rajout�e") ;
             
-            // Close the statement 
-            stmt.close() ;
+            System.out.println("fin fonction");
 
-        }
+		}
 		
 		catch(SQLException e){
 			// commentaire si erreur
@@ -425,7 +430,7 @@ public class CreationSeminaireComplet {
 		dateSeminaire = sc.nextLine();
 	    
 		// Tester si une date est valide autant au niveau du format qu'au niveau du calendrier
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mi:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		sdf.setLenient(false);
 		java.util.Date dateV = null;
 		try {
@@ -711,6 +716,7 @@ public class CreationSeminaireComplet {
 		// Total des depenses pr�vues (min, max)
 		depensesSeminaire(conn, idSeminaire);
 		
+		sc.close();
 		
 	}
 

@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.io.*;
-import java.sql.*;
 
 public class Connexionsgbd {
     private static final String configurationFile = "BD.properties";
@@ -17,6 +15,7 @@ public class Connexionsgbd {
 
             DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
             jdbcDriver = dap.getJdbcDriver();
+            System.out.println(jdbcDriver);
             dbUrl = dap.getDatabaseUrl();
             username = dap.getUsername();
             password = dap.getPassword();
@@ -64,6 +63,7 @@ public class Connexionsgbd {
             // Print information about connection warnings
             SQLWarningsExceptions.printWarnings(conn);
             conn.close() ;
+            sc.close();
         }
         catch( SQLException se ) {
 
