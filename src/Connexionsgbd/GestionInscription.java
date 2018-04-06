@@ -40,7 +40,7 @@ public class GestionInscription {
 			Statement stmt = conn.createStatement() ;
         	
 			// R�cup�ration des r�sultats des requetes
-            ResultSet res = stmt.executeQuery("SELECT ...");
+            ResultSet res = stmt.executeQuery("SELECT nbMax - nbParticipant as nbCheck  FROM Seminaire natural join (SELECT idSeminaire, count(idParticipant) as nbParticipant FROM Participant WHERE estEnAttente = 0 GROUP BY idSeminaire) WHERE idSeminaire =" +idSeminaire);
 
             
             // On r�cup�re les r�sultats qui sont en 1�re position
@@ -111,7 +111,7 @@ public class GestionInscription {
 			Statement stmt = conn.createStatement() ;
         	
 			// R�cup�ration des r�sultats des requetes
-            ResultSet res = stmt.executeQuery("SELECT ...");
+            ResultSet res = stmt.executeQuery("SELECT nbMax - nbParticipant as nbCheck FROM Seminaire natural join (SELECT idSeminaire, count(idParticipant) as nbParticipant FROM Participant WHERE estEnAttente = 0 GROUP BY idSeminaire) WHERE idSeminaire =" + idSeminaire);
 
             
             // On r�cup�re les r�sultats qui sont en 1�re position

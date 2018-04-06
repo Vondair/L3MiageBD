@@ -330,8 +330,8 @@ public class CreationSeminaireComplet {
 				Statement stmtMin = conn.createStatement() ;	
 	        	
 				// R�cup�ration des d�penses des requetes
-	            ResultSet resMax = stmtMax.executeQuery("SELECT (prixSalle + prixRepas * nbRepas * nbMax + prixPause * nbPause * nbMax)  as depenseMax  FROM Seminaire WHERE idSeminaire = "+idSeminaire + "and nbRepas = (SELECT repas from Seminaire WHERE idSeminaire = "+idSeminaire + ") and nbPause = (SELECT typeSeminaire+1 FROM Seminaire WHERE idSeminaire = "+idSeminaire );
-	            ResultSet resMin = stmtMin.executeQuery("SELECT ...");
+	            ResultSet resMax = stmtMax.executeQuery("SELECT (prixSalle + prixRepas * repas * nbMax + prixPause * (typeSeminaire+1)  * nbMax) as depenseMax FROM Seminaire natural join Prestataire WHERE idSeminaire = "+idSeminaire);
+	            ResultSet resMin = stmtMin.executeQuery("SELECT (prixSalle + prixRepas * repas * (nbMax/2) + prixPause * (typeSeminaire+1)  * (nbMax/2)) as depenseMax FROM Seminaire natural join Prestataire WHERE idSeminaire = "+idSeminaire);
 
 	            // On r�cup�re les r�sultats qui sont en 1�re position
 		        while (resMax.next()) {
