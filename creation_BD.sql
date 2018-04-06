@@ -25,14 +25,14 @@ create table Seminaire (
         dateSeminaire date NOT NULL,
         nbMax integer NOT NULL,
         prixSeminaire float NOT NULL,
-        typeSeminaire varchar (12) NOT NULL, 
+        typeSeminaire number (1) NOT NULL, 
         repas number(1) NOT NULL,
         PRIMARY KEY (idSeminaire),
         FOREIGN KEY (idEntreprise) REFERENCES Entreprise(idEntreprise),
         CONSTRAINT idSeminaireSup0Seminaire CHECK (idSeminaire > 0),
-	CONSTRAINT checkrepas CHECK (repas IN (1,0)),
+		CONSTRAINT checkrepas CHECK (repas IN (1,0)),
         CONSTRAINT idEntrepriseSup0Seminaire CHECK (idEntreprise > 0),
-        CONSTRAINT checkTypeSeminaire CHECK (typeSeminaire IN ('journee', 'demi_journee')),
+        CONSTRAINT checkTypeSeminaire CHECK (typeSeminaire IN (1,0)),
         CONSTRAINT prixSeminaireSup0 CHECK (prixSeminaire > 0),
         CONSTRAINT nbMaxSup0 CHECK (nbMax > 0)
 );
@@ -102,8 +102,8 @@ create table Participant (
         estEnAttente number(1) NOT NULL,
         PRIMARY KEY (idParticipant),
         FOREIGN KEY(idSeminaire) REFERENCES Seminaire(idSeminaire),
-	CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
-	CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
+		CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
+		CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
         CONSTRAINT idSeminaireSup0Participant CHECK (idSeminaire > 0)
 );
 
