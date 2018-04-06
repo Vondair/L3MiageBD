@@ -56,13 +56,13 @@ create table Prestataire (
         codePostalPrestataire number(5) NOT NULL,
         villePrestataire varchar(20) NOT NULL,
         telephonePrestataire number(10) NOT NULL,
-        PRIMARY KEY (idPrestataire),
+        PRIMARY KEY (idPrestataire,idSeminaire),
         FOREIGN KEY (idSeminaire) REFERENCES Seminaire(idSeminaire),
-        CONSTRAINT idPrestataireSup0 CHECK (idPrestataire > 0),
-        CONSTRAINT idSeminaireSup0Prestataire CHECK (idSeminaire > 0),
-        CONSTRAINT prixRepasSup0 CHECK (prixRepas > 0),
-        CONSTRAINT prixPauseSup0 CHECK (prixPause > 0),
-        CONSTRAINT prixSalleSup0 CHECK (prixSalle > 0)
+        CONSTRAINT idPrestataireSup02 CHECK (idPrestataire > 0),
+        CONSTRAINT idSeminaireSup0Prestataire2 CHECK (idSeminaire > 0),
+        CONSTRAINT prixRepasSup02 CHECK (prixRepas > 0),
+        CONSTRAINT prixPauseSup02 CHECK (prixPause > 0),
+        CONSTRAINT prixSalleSup02 CHECK (prixSalle > 0)
 );
 
 -- La relation Prestataire est en 3FN  car : 
@@ -102,8 +102,8 @@ create table Participant (
         estEnAttente number(1) NOT NULL,
         PRIMARY KEY (idParticipant),
         FOREIGN KEY(idSeminaire) REFERENCES Seminaire(idSeminaire),
-		CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
-		CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
+	CONSTRAINT checkestEnAttente CHECK (estEnAttente IN (1,0)),        
+	CONSTRAINT idParticipantSup0 CHECK (idParticipant > 0),
         CONSTRAINT idSeminaireSup0Participant CHECK (idSeminaire > 0)
 );
 
