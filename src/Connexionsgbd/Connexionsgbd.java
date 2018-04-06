@@ -27,6 +27,9 @@ public class Connexionsgbd {
             // Get a connection to the database
             Connection conn = DriverManager.getConnection(dbUrl, username, password);
             
+            // Test confirmation seminaire
+            ConfirmationSeminaire.CheckSeminaire(conn);
+            
             // Scanner pour récupérer reponses
    		 	Scanner sc = new Scanner (System.in);
    		 	int reponse ;

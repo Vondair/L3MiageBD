@@ -50,10 +50,10 @@ public class ConfirmationSeminaire {
 		        }
 		        
 		        else {
-		        	System.out.println("Il n'y a assez de personne à votre séminaire, il va donc être confirmé");
+		        	System.out.println("Il y a assez de personne à votre séminaire, il va donc être confirmé");
 		        	
 		        	/*nombre de participant au séminaire*/
-		            res3 = stmt2.executeQuery("SELECT count(idParticipant) as nbParticipant FROM Participant WHERE estAttente = 0 and idSeminaire =" +resSem);
+		            res3 = stmt2.executeQuery("SELECT count(idParticipant) as nbParticipant FROM Participant WHERE estEnAttente = 0 and idSeminaire =" +resSem);
 		            
 		            // On r�cup�re les r�sultats qui sont en 1�re position
 			        while (res3.next()) {
@@ -121,8 +121,8 @@ public class ConfirmationSeminaire {
 				Statement stmtdepense = conn.createStatement() ;	
 	        	
 				// R�cup�ration des r�sultats des requetes
-	            ResultSet resrecette = stmtrecette.executeQuery("SELECT prixSeminaire*" + nbParticipant+" as recette  FROM Seminaire WHERE idSeminaire = "+idSeminaire);
-	            ResultSet resdepense = stmtdepense.executeQuery("SELECT (prixSalle + prixRepas * nbRepas * " + nbParticipant+" + prixPause * nbPause * " + nbParticipant+")  as depense FROM Seminaire WHERE idSeminaire = "+idSeminaire);
+	            ResultSet resrecette = stmtrecette.executeQuery("SELECT prixSeminaire*" + nbParticipant+" as recette  FROM Seminaire WHERE idSeminaire = "+idSeminaire );
+	            ResultSet resdepense = stmtdepense.executeQuery("SELECT (prixSalle + prixRepas * repas * " + nbParticipant+" + prixPause * typeSeminaire * " + nbParticipant+")  as depense FROM Seminaire natural join Prestataire WHERE idSeminaire = "+idSeminaire );
 
 	            // On r�cup�re les r�sultats qui sont en 1�re position
 	            int recette = 0;
@@ -150,7 +150,7 @@ public class ConfirmationSeminaire {
 	        
 	        catch(SQLException e){
 				// commentaire si erreur
-		        System.out.println("Erreur recette Seminaire") ;
+		        System.out.println("Erreur bilan Seminaire") ;
 		        SQLWarningsExceptions.printExceptions(e) ;
 		        System.exit(1) ;
 			} 

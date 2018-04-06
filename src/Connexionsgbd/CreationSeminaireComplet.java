@@ -603,7 +603,7 @@ public class CreationSeminaireComplet {
 			titreConference  = sc.nextLine();
 			
 			// Récupération de la date de remise des transparents
-			System.out.print("Veuillez rentrer la date de remise des transparents au format yyyy-MM-dd hh:mi:ss : ");
+			System.out.print("Veuillez rentrer la date de remise des transparents au format yyyy-MM-dd hh:mm:ss : ");
 			dateRemiseTransparents = sc.nextLine();
 		    
 			// Tester si une date est valide autant au niveau du format qu'au niveau du calendrier
