@@ -15,7 +15,7 @@ Triggers :
 -- 1/ (Un séminaire est créé si on a 3 activités au moins, les activités sont créées si on a un séminaire)
 -- Pour un séminaire il y a 3 (demi -journée) ou 6 (journée) activités
 
-CREATE OR REPLACE TRIGGER troisActivitesDJ
+CREATE OR REPLACE TRIGGER contrainte_1
 BEFORE insert on Activite
 For each row
 DECLARE
@@ -35,7 +35,7 @@ END ;
 
 -- Création OK fonctionnement à tester
 
-CREATE OR REPLACE TRIGGER sixActivitesJ
+CREATE OR REPLACE TRIGGER contrainte_2
 BEFORE insert on Activite
 For each row
 DECLARE
@@ -58,7 +58,7 @@ END ;
 ---------------------------------------------------------------------------------------------------------------------------
 -- 2/ Un déjeuner est obligatoirement prévu si un séminaire dure toute la journée
 
-CREATE OR REPLACE TRIGGER dejeunerSiJournee
+CREATE OR REPLACE TRIGGER contrainte_3
 BEFORE insert on Seminaire
 For each row
 BEGIN
@@ -74,7 +74,7 @@ END;
 ---------------------------------------------------------------------------------------------------------------------------
 -- 3/ Si une personne s’inscrit alors que le nombre maximum de participant est atteint alors il va dans la liste d’attente
 
-CREATE OR REPLACE TRIGGER listeAttenteSiComplet
+CREATE OR REPLACE TRIGGER contrainte_4
 BEFORE insert on Participant
 For each row
 DECLARE
@@ -110,7 +110,7 @@ END;
 
 -- Si un participant se désiste, le premier de la liste d’attente passe en participant
 
-CREATE OR REPLACE TRIGGER desistement
+CREATE OR REPLACE TRIGGER contrainte_5
 BEFORE delete on Participant
 for each row
 DECLARE
@@ -143,17 +143,18 @@ END ;
 ---------------------------------------------------------------------------------------------------------------------------
 
 -- 5/Il ne peut pas y avoir plus de 3 séminaires le même jour
-CREATE OR REPLACE TRIGGER troisSeminairesMaxParJour
+CREATE OR REPLACE TRIGGER contrainte_6
 BEFORE insert on Seminaire
 For each row
 DECLARE
 	VnbSeminairesPourLaDate integer;
 BEGIN
-	select count(idSeminaire) into VnbSeminairesPourLaDate
+	select idEntreprise, count(idSeminaire) into VnbSeminairesPourLaDate
 	from Seminaire
-	where dateSeminaire = :NEW.dateSeminaire;
+	where dateSeminaire = :NEW.dateSeminaire
+	group by idEntreprise;
 
-	if (VnbSeminairesPourLaDate = 3) then
+	if (VnbSeminairesPourLaDate >= 3) then
 		raise_application_error(-20100,'Il ne peut pas y avoir plus de trois seminaires le meme jour');
 	end if;
 EXCEPTION
@@ -164,7 +165,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 6/Les inscriptions pour un séminaire ouvrent 1 mois avant la date de celui-ci, et la date d'inscription est sysdate
-CREATE OR REPLACE TRIGGER inscriptionsUnMoisAvant
+CREATE OR REPLACE TRIGGER contrainte_7
 BEFORE insert on Participant
 For each row
 DECLARE
@@ -189,7 +190,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 7/Le nombre de participants doit être fixé 1 semaine avant un séminaire
-CREATE OR REPLACE TRIGGER limiteInscription
+CREATE OR REPLACE TRIGGER contrainte_8
 BEFORE insert on Participant
 For each row
 DECLARE
@@ -210,7 +211,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 8/ Si le nombre max de participants n'est pas atteint, toute inscription se fait en tant que participant.
-CREATE OR REPLACE TRIGGER participantSiPasNbMax
+CREATE OR REPLACE TRIGGER contrainte_9
 BEFORE insert on Participant
 For each row
 DECLARE
@@ -238,7 +239,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 9/Il n'y a qu'un seul prestataire par séminaire
-CREATE OR REPLACE TRIGGER unPrestataireParSeminaire
+CREATE OR REPLACE TRIGGER contrainte_10
 BEFORE insert on Prestataire
 For each row
 DECLARE
@@ -259,7 +260,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 10/Deux séminaires qui se déroulent le même jour ne peuvent pas avoir le même prestataire
-CREATE OR REPLACE TRIGGER deuxSemSeuxPrest
+CREATE OR REPLACE TRIGGER contrainte_11
 BEFORE insert on Prestataire
 For each row
 DECLARE 
@@ -282,7 +283,7 @@ END;
 -- Création OK fonctionnement à tester
 
 -- 11/ Il n'y a qu'un animateur par séminaire
-CREATE OR REPLACE TRIGGER unAnimateurParSeminaire
+CREATE OR REPLACE TRIGGER contrainte_12
 BEFORE insert on Animateur
 For each row
 DECLARE
