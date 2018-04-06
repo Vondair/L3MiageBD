@@ -29,21 +29,21 @@ public class CreationSeminaireComplet {
 	    * @throws Exception 
 	    */
 	
-	public static void CreationSeminaire(Connection conn, int idSeminaire, int idEntreprise, int nbMax, int repas, int prixSeminaire, String theme, String typeSeminaire, String dateSeminaire ) throws SQLException {
+	public static void CreationSeminaire(Connection conn, int idSeminaire, int idEntreprise, int nbMax, int repas, int prixSeminaire, String theme, int typeSeminaire, String dateSeminaire ) throws SQLException {
 
 		try {
 			 // Get a statement from the connection
 	        Statement stmt = conn.createStatement() ;
 			
 			//commande
-            String s = "INSERT INTO Seminaire VALUES (" + idSeminaire + "," + idEntreprise + "," + "'" + theme + "'" + "," + "to_date('" + dateSeminaire + "' ,'yyyy-MM-dd')" + "," + nbMax + "," + prixSeminaire + "," + "'" + typeSeminaire + "'" + "," + repas + ")";
-            // execution de la commande + récupératino du résultat
+            String s = "INSERT INTO Seminaire VALUES (" + idSeminaire + "," + idEntreprise + "," + "'" + theme + "'" + "," + "to_date('" + dateSeminaire + "' ,'yyyy-MM-dd hh:mi:ss')" + "," + nbMax + "," + prixSeminaire + "," + typeSeminaire + "," + repas + ")";
+            // execution de la commande + rï¿½cupï¿½ratino du rï¿½sultat
             int res = stmt.executeUpdate(s);
             
             
-            // commentaire si tout c'est bien passé
+            // commentaire si tout c'est bien passï¿½
             System.out.println(s);
-            System.out.println("Insertion du séminaire, " + res + "ligne rajoutée") ;
+            System.out.println("Insertion du sï¿½minaire, " + res + "ligne rajoutï¿½e") ;
             
             // Close the statement 
             stmt.close() ;
@@ -52,7 +52,7 @@ public class CreationSeminaireComplet {
 		
 		catch(SQLException e){
 			// commentaire si erreur
-	        System.out.println("Erreur de Creation séminaire!") ;
+	        System.out.println("Erreur de Creation sï¿½minaire!") ;
 	        SQLWarningsExceptions.printExceptions(e) ;
 	        System.exit(1) ;
 		}
@@ -91,13 +91,13 @@ public class CreationSeminaireComplet {
 			
 			//commande
 	         String s = "INSERT INTO Animateur VALUES (" + idAnimateur + "," + idSeminaire + "," + "'" + nomAnimateur + "'" + "," + "'" + prenomAnimateur + "'" + "," + "'" + mailAnimateur + "'" + "," + numeroAnimateur + "," + "'" + rueAnimateur + "'" + "," + codePostalAnimateur + "," + "'" + villeAnimateur + "'" + "," + telephoneAnimateur + ")";
-	         // execution de la commande + récupératino du résultat
+	         // execution de la commande + rï¿½cupï¿½ratino du rï¿½sultat
 	         int res = stmt.executeUpdate(s);
 	         
 	         
-	         // commentaire si tout c'est bien passé
+	         // commentaire si tout c'est bien passï¿½
 	         System.out.println(s);
-	         System.out.println("Insertion de l'animateur, " + res + "ligne rajoutée") ;
+	         System.out.println("Insertion de l'animateur, " + res + "ligne rajoutï¿½e") ;
 	         
 	         // Close the statement 
 	         stmt.close() ;
@@ -117,7 +117,7 @@ public class CreationSeminaireComplet {
 	
 	
 	/**
-	    * CrÃ©ation d'une activité
+	    * CrÃ©ation d'une activitï¿½
 	    *
 	    * @param conn connexion Ã  la base de donnÃ©es
 	    * 		idActivite
@@ -137,13 +137,13 @@ public class CreationSeminaireComplet {
 			
 			//commande
 		    String s = "INSERT INTO Activite VALUES (" + idActivite + "," + idSeminaire + "," + "'" + nomActivite + "'" + ")";
-		    // execution de la commande + récupératino du résultat
+		    // execution de la commande + rï¿½cupï¿½ratino du rï¿½sultat
 		    int res = stmt.executeUpdate(s);
 		      
 		      
-		    // commentaire si tout c'est bien passé
+		    // commentaire si tout c'est bien passï¿½
 		    System.out.println(s);
-		    System.out.println("Insertion de l'activité, " + res + "ligne rajoutée") ;
+		    System.out.println("Insertion de l'activitï¿½, " + res + "ligne rajoutï¿½e") ;
 		      
 		    // Close the statement 
 		    stmt.close() ;
@@ -152,7 +152,7 @@ public class CreationSeminaireComplet {
 		
 		catch(SQLException e){
 			// commentaire si erreur
-	        System.out.println("Erreur de Creation Activité!") ;
+	        System.out.println("Erreur de Creation Activitï¿½!") ;
 	        SQLWarningsExceptions.printExceptions(e) ;
 	        System.exit(1) ;
 		}
@@ -193,14 +193,14 @@ public class CreationSeminaireComplet {
 			Statement stmt = conn.createStatement() ;
 			
 			//commande
-			String s = "INSERT INTO Conferencier VALUES (" + idConferencier + "," + idActivite + "," + "'" + nomConferencier + "'" + "," + "'" + prenomConferencier + "'" + "," + "'" + mailConferencier + "'" + "," + numeroConferencier + "," + "'" + rueConferencier + "'" + "," + codePostalConferencier + "," + "'" + villeConferencier + "'" + "," + telephoneConferencier + "," + "'" + titreConference + "'" + "," + "'" + dateRemiseTransparents + "'" + ")";
-			// execution de la commande + récupératino du résultat
+			String s = "INSERT INTO Conferencier VALUES (" + idConferencier + "," + idActivite + "," + "'" + nomConferencier + "'" + "," + "'" + prenomConferencier + "'" + "," + "'" + mailConferencier + "'" + "," + numeroConferencier + "," + "'" + rueConferencier + "'" + "," + codePostalConferencier + "," + "'" + villeConferencier + "'" + "," + telephoneConferencier + "," + "'" + titreConference + "'" + "," + "to_date('" + dateRemiseTransparents + "' ,'yyyy-MM-dd hh:mi:ss')" + ")";
+			// execution de la commande + rï¿½cupï¿½ratino du rï¿½sultat
 			int res = stmt.executeUpdate(s);
 	      
 	      
-			// commentaire si tout c'est bien passé
+			// commentaire si tout c'est bien passï¿½
 			System.out.println(s);
-			System.out.println("Insertion d'un conferencier, " + res + "ligne rajoutée") ;
+			System.out.println("Insertion d'un conferencier, " + res + "ligne rajoutï¿½e") ;
 	      
 			// Close the statement 
 			stmt.close() ;
@@ -250,13 +250,13 @@ public class CreationSeminaireComplet {
 			
 			//commande
 			String s = "INSERT INTO Prestataire VALUES (" + idPrestataire + "," + idSeminaire + "," + "'" + nomPrestataire + "'" + "," + prixRepas + "," + prixPause + "," + prixSalle + "," + "'" + mailPrestataire + "'" + "," + numeroPrestataire + "," +  "'" + ruePrestataire + "'" + "," + codePostalPrestataire + "," + "'" + villePrestataire + "'" + "," + telephonePrestataire + "," + ")";
-			// execution de la commande + récupératino du résultat
+			// execution de la commande + rï¿½cupï¿½ratino du rï¿½sultat
 			int res = stmt.executeUpdate(s);
 	      
 	      
-			// commentaire si tout c'est bien passé
+			// commentaire si tout c'est bien passï¿½
 			System.out.println(s);
-			System.out.println("Insertion d'un prestataire, " + res + "ligne rajoutée") ;
+			System.out.println("Insertion d'un prestataire, " + res + "ligne rajoutï¿½e") ;
 	      
 			// Close the statement 
 			stmt.close() ;
@@ -287,11 +287,11 @@ public class CreationSeminaireComplet {
 				 // Get a statement min from the connection
 				Statement stmtMin = conn.createStatement() ;	
 	        	
-				// Récupération des résultats des requetes
+				// Rï¿½cupï¿½ration des rï¿½sultats des requetes
 	            ResultSet resMax = stmtMax.executeQuery("SELECT prixSeminaire*nbMax as recetteMax  FROM Seminaire WHERE idSeminaire = "+idSeminaire);
 	            ResultSet resMin = stmtMin.executeQuery("SELECT prixSeminaire*(nbMax/2) as recetteMin  FROM Seminaire WHERE idSeminaire = "+idSeminaire);
 
-	            // On récupère les résultats qui sont en 1ère position
+	            // On rï¿½cupï¿½re les rï¿½sultats qui sont en 1ï¿½re position
 		        while (resMax.next()) {
 		        	System.out.println("Recettes maximum : " + resMax.getInt(1));
 		        }
@@ -329,11 +329,11 @@ public class CreationSeminaireComplet {
 				 // Get a statement min from the connection
 				Statement stmtMin = conn.createStatement() ;	
 	        	
-				// Récupération des dépenses des requetes
-	            ResultSet resMax = stmtMax.executeQuery("SELECT (prixSalle + prixRepas * nbRepas * nbMax + prixPause * nbPause * nbMax)  as depenseMax  FROM Seminaire WHERE idSeminaire = "+idSeminaire + "and nbRepas = (SELECT repas from Seminaire WHERE idSeminaire = "+idSeminaire + ") and nbPause = (...");
+				// Rï¿½cupï¿½ration des dï¿½penses des requetes
+	            ResultSet resMax = stmtMax.executeQuery("SELECT (prixSalle + prixRepas * nbRepas * nbMax + prixPause * nbPause * nbMax)  as depenseMax  FROM Seminaire WHERE idSeminaire = "+idSeminaire + "and nbRepas = (SELECT repas from Seminaire WHERE idSeminaire = "+idSeminaire + ") and nbPause = (SELECT typeSeminaire+1 FROM Seminaire WHERE idSeminaire = "+idSeminaire );
 	            ResultSet resMin = stmtMin.executeQuery("SELECT ...");
 
-	            // On récupère les résultats qui sont en 1ère position
+	            // On rï¿½cupï¿½re les rï¿½sultats qui sont en 1ï¿½re position
 		        while (resMax.next()) {
 		        	System.out.println("Depenses maximum : " + resMax.getInt(1));
 		        }
@@ -376,8 +376,8 @@ public class CreationSeminaireComplet {
 
 		/*Seminaire*/
 		// Attributs de la table
-		int idSeminaire, idEntreprise, nbMax, repas, prixSeminaire ;
-		String theme, typeSeminaire, dateSeminaire ;
+		int idSeminaire, idEntreprise, nbMax, repas, prixSeminaire, typeSeminaire ;
+		String theme, dateSeminaire ;
 
 		
 		// RÃ©cupÃ©ration de l'id du SÃ©minaire
@@ -411,21 +411,21 @@ public class CreationSeminaireComplet {
 		theme = sc.nextLine();
 	    
 		// RÃ©cupÃ©ration du type de Seminaire (journÃ©e, demi_journÃ©e)
-		System.out.print("Veuillez rentrer le typeSeminaire (journee / demi_journee) : ");
-		typeSeminaire = sc.nextLine();
+		System.out.print("Veuillez rentrer le typeSeminaire (journee:1 / demi_journee:0) : ");
+		typeSeminaire = Integer.parseInt(sc.nextLine());
 		
-		while(!"journee".equalsIgnoreCase(typeSeminaire) && !"demi_journee".equalsIgnoreCase(typeSeminaire)){
-	            System.out.println("Veuillez rentrer un typeSeminaire valide (journee / demi_journee) : ");
-	            typeSeminaire = sc.nextLine();
+		while((typeSeminaire != 0) && (typeSeminaire != 1)){
+	            System.out.println("Veuillez rentrer un typeSeminaire valide (journee:1 / demi_journee:0) : ");
+	            typeSeminaire = Integer.parseInt(sc.nextLine());
 	    }
 
 		
 		// RÃ©cupÃ©ration de la date du SÃ©minaire
-		System.out.print("Veuillez rentrer la date du SÃ©minaire au format yyyy-MM-dd : ");
+		System.out.print("Veuillez rentrer la date du SÃ©minaire au format yyyy-MM-dd hh:mi:ss: ");
 		dateSeminaire = sc.nextLine();
 	    
 		// Tester si une date est valide autant au niveau du format qu'au niveau du calendrier
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mi:ss");
 		sdf.setLenient(false);
 		java.util.Date dateV = null;
 		try {
@@ -445,7 +445,7 @@ public class CreationSeminaireComplet {
 		}
 		
 		
-		// Création du Séminaire
+		// Crï¿½ation du Sï¿½minaire
 		CreationSeminaire(conn, idSeminaire, idEntreprise, nbMax, repas, prixSeminaire, theme, typeSeminaire, dateSeminaire);
 		
 		
@@ -502,24 +502,24 @@ public class CreationSeminaireComplet {
 		villeAnimateur = sc.nextLine();
 		
 		// RÃ©cupÃ©ration du telephone de l'animateur
-		System.out.print("Veuillez rentrer le téléphone de l'animateur : ");
+		System.out.print("Veuillez rentrer le tï¿½lï¿½phone de l'animateur : ");
 		telephoneAnimateur = Integer.parseInt(sc.nextLine());
 		
 		
-		// Création de l'animateur
+		// Crï¿½ation de l'animateur
 		CreationAnimateur(conn, idAnimateur, idSeminaire, numeroAnimateur, nomAnimateur, prenomAnimateur, mailAnimateur, rueAnimateur , codePostalAnimateur, villeAnimateur, telephoneAnimateur);
 				
 				
 		
 		
 		
-		/*Activités*/
+		/*Activitï¿½s*/
 		int idActivite  ;
 		String nomActivite ;
 
 		
-		// RÃ©cupÃ©ration de l'id de l'Activité
-		System.out.print("Veuillez rentrer l'id de l'Activité : ");
+		// RÃ©cupÃ©ration de l'id de l'Activitï¿½
+		System.out.print("Veuillez rentrer l'id de l'Activitï¿½ : ");
 		idActivite = Integer.parseInt(sc.nextLine());
 	    
 		while(idActivite <= 0){
@@ -527,11 +527,11 @@ public class CreationSeminaireComplet {
             idActivite = Integer.parseInt(sc.nextLine());
 		}
 		
-		// RÃ©cupÃ©ration du nom de l'activité
-		System.out.print("Veuillez rentrer le nom de l'activité : ");
+		// RÃ©cupÃ©ration du nom de l'activitï¿½
+		System.out.print("Veuillez rentrer le nom de l'activitï¿½ : ");
 		nomActivite = sc.nextLine();
 	
-		// Création de l'activité
+		// Crï¿½ation de l'activitï¿½
 		CreationActivite(conn, idActivite, idSeminaire, nomActivite);
 		
 		
@@ -542,8 +542,8 @@ public class CreationSeminaireComplet {
 		String nomConferencier , prenomConferencier , mailConferencier , rueConferencier , villeConferencier, titreConference, dateRemiseTransparents    ;
 		
 
-		// Demande du nombre de conférencier a creer
-		System.out.print("Veuillez indiquer le nombre de conférencier : ");
+		// Demande du nombre de confï¿½rencier a creer
+		System.out.print("Veuillez indiquer le nombre de confï¿½rencier : ");
 		nbConf = Integer.parseInt(sc.nextLine());
 		
 		while (nbConf != 0) {
@@ -590,7 +590,7 @@ public class CreationSeminaireComplet {
 			villeConferencier = sc.nextLine();
 			
 			// RÃ©cupÃ©ration du telephone du Conferencier
-			System.out.print("Veuillez rentrer le téléphone du Conferencier : ");
+			System.out.print("Veuillez rentrer le tï¿½lï¿½phone du Conferencier : ");
 			telephoneConferencier = Integer.parseInt(sc.nextLine());
 			
 			// RÃ©cupÃ©ration du titre de la conference
@@ -598,11 +598,11 @@ public class CreationSeminaireComplet {
 			titreConference  = sc.nextLine();
 			
 			// RÃ©cupÃ©ration de la date de remise des transparents
-			System.out.print("Veuillez rentrer la date de remise des transparents au format yyyy-MM-dd : ");
+			System.out.print("Veuillez rentrer la date de remise des transparents au format yyyy-MM-dd hh:mi:ss : ");
 			dateRemiseTransparents = sc.nextLine();
 		    
 			// Tester si une date est valide autant au niveau du format qu'au niveau du calendrier
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd hh:mi:ss");
 			sdf2.setLenient(false);
 			dateV = null;
 			try {
@@ -611,7 +611,7 @@ public class CreationSeminaireComplet {
 	            e.printStackTrace();
 	        }
 			
-			// Création du Conferencier
+			// Crï¿½ation du Conferencier
 			CreationConferencier(conn, idConferencier, idActivite, numeroConferencier, nomConferencier, prenomConferencier, mailConferencier, rueConferencier , codePostalConferencier, villeConferencier, telephoneConferencier, titreConference, dateRemiseTransparents);
 			
 			nbConf-- ;
@@ -694,21 +694,21 @@ public class CreationSeminaireComplet {
 		villePrestataire = sc.nextLine();
 		
 		// RÃ©cupÃ©ration du telephone de Prestataire
-		System.out.print("Veuillez rentrer le téléphone de Prestataire : ");
+		System.out.print("Veuillez rentrer le tï¿½lï¿½phone de Prestataire : ");
 		telephonePrestataire = Integer.parseInt(sc.nextLine());
 		
 		
 		
 		
-		// Création du Prestataire
+		// Crï¿½ation du Prestataire
 		CreationPrestataire(conn, idPrestataire, idSeminaire, nomPrestataire, prixRepas, prixPause, prixSalle, mailPrestataire , numeroPrestataire, ruePrestataire, codePostalPrestataire, villePrestataire, telephonePrestataire);
 		
 		
 		
-		// Total des recettes prévues (min, max)
+		// Total des recettes prï¿½vues (min, max)
 		recettesSeminaire(conn, idSeminaire);
 		
-		// Total des depenses prévues (min, max)
+		// Total des depenses prï¿½vues (min, max)
 		depensesSeminaire(conn, idSeminaire);
 		
 		

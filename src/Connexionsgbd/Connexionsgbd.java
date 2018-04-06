@@ -28,12 +28,39 @@ public class Connexionsgbd {
             // Get a connection to the database
             Connection conn = DriverManager.getConnection(dbUrl, username, password);
             
-            /* Exercice 2 */
-            //requetesbd.nbemp(conn);
-            //requetesbd.employes(conn);
-            //requetesbd.requete1(conn);
-            CreationSeminaireComplet.InfoSeminaire(conn);
+            // Scanner pour récupérer reponses
+   		 	Scanner sc = new Scanner (System.in);
+   		 	int reponse ;
             
+            /* Table */
+    		System.out.println("Bienvenue dans votre gestionnaire de Séminaire");
+    		System.out.println("Vous pourrez ajouter des séminaires, des animateurs, des prestataires, des entreprises, des conferenciers, des activités, des participants");
+
+    		
+    		// Ajout séminaire
+    		System.out.print("Voulez vous ajoutez un séminaire ? (oui : 1, non :0) ");
+    		reponse = Integer.parseInt(sc.nextLine());
+    		
+    		while((reponse != 0) && (reponse != 1)){
+    	            System.out.println("Veuillez rentrer 1 pour oui, 0 pour non ");
+    	            reponse = Integer.parseInt(sc.nextLine());
+    	    }
+    		while (reponse ==1){
+    			CreationSeminaireComplet.InfoSeminaire(conn);
+    			
+    			System.out.print("Voulez vous ajoutez un autre séminaire ? (oui : 1, non :0) ");
+        		reponse = Integer.parseInt(sc.nextLine());
+        		
+        		while((reponse != 0) && (reponse != 1)){
+        	            System.out.println("Veuillez rentrer 1 pour oui, 0 pour non ");
+        	            reponse = Integer.parseInt(sc.nextLine());
+        	    }
+    		}
+            
+    		
+    		System.out.print("Aurevoir");
+    		
+    		
             // Print information about connection warnings
             SQLWarningsExceptions.printWarnings(conn);
             conn.close() ;
