@@ -27,20 +27,26 @@ public class Connexionsgbd {
             // Get a connection to the database
             Connection conn = DriverManager.getConnection(dbUrl, username, password);
             
-            // Test confirmation seminaire
-            ConfirmationSeminaire.CheckSeminaire(conn);
-            
             // Scanner pour récupérer reponses
    		 	Scanner sc = new Scanner (System.in);
-   		 	int reponse ;
+   		 	
+   		 	int reponse, checkS ;
+    		System.out.println("Bienvenue dans votre gestionnaire de Séminaire");
+
+            
+            // Test confirmation seminaire
+    		System.out.println("Boulez vous v�rifier les s�minaire ? (oui : 1, non : 0");
+    		checkS = Integer.parseInt(sc.nextLine());
+    		if(checkS ==1)
+    			ConfirmationSeminaire.CheckSeminaire(conn);
+
             
             /* Table */
-    		System.out.println("Bienvenue dans votre gestionnaire de Séminaire");
     		System.out.println("Vous pourrez ajouter des séminaires, des animateurs, des prestataires, des entreprises, des conferenciers, des activités, des participants");
 
     		
     		// Ajout séminaire
-    		System.out.print("Voulez vous ajoutez un séminaire ? (oui : 1, non :0) ");
+    		System.out.print("Voulez vous ajoutez un séminaire ? (oui : 1, non : 0) ");
     		reponse = Integer.parseInt(sc.nextLine());
     		
     		while((reponse != 0) && (reponse != 1)){

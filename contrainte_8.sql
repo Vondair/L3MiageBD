@@ -1,0 +1,3 @@
+INSERT INTO Participant (idParticipant,idSeminaire, dateInscription, nomParticipant, prenomParticipant,mailParticipant, numeroParticipant, rueParticipant, codePostalParticipant, villeParticipant,telephoneParticipant,estEnAttente)
+ VALUES
+(001, 001, to_date('2018-07-24 08:00:00','yyyy-mm-dd hh:mi:ss'), 'LeHAricotMagique','jack' , 'jackLeHAricotMagique@participant.com', 5, 'rue tour de lEau', 38400, 'St Martin dheres', '2222222001',0);

@@ -1,19 +1,6 @@
-Triggers :
 
-
-
-
--- ///////////////////////////////////////////////////////////////////////////////
-
--- crÃ©ation de sÃ©minaire bien checker la date 1 mois pas possible de crÃ©er un sÃ©minaire â‡’ trigger
-
--- une semaine avant vÃ©rifier nb participants â‡’ dÃ©clencher un action (manuelle) java (requÃªte ou JDBC vÃ©rifier ce sÃ©minaire ... ou vÃ©rification de lâ€™ensemble de sÃ©minaire)
-
--- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
---  (Un sÃ©minaire est crÃ©Ã© si on a 3 activitÃ©s au moins, les activitÃ©s sont crÃ©Ã©es si on a un sÃ©minaire)
--- Pour un sÃ©minaire il y a 3 (demi -journÃ©e) ou 6 (journÃ©e) activitÃ©s
+--  (Un séminaire est créé si on a 3 activités au moins, les activités sont créées si on a un séminaire)
+-- Pour un séminaire il y a 3 (demi -journée) ou 6 (journée) activités
 
 CREATE OR REPLACE TRIGGER contrainte_1
 AFTER insert on Activite
@@ -26,7 +13,7 @@ BEGIN
 	where typeSeminaire = 0 and A.idSeminaire = :NEW.idSeminaire;
 	
 	if (VnbActivite > 3) then
-		raise_application_error(-20100,'Il y a un probleme au niveau du nombre dâ€™activites (3 activites pour un seminaire dâ€™une demi-journee)');
+		raise_application_error(-20100,'Il y a un probleme au niveau du nombre d’activites (3 activites pour un seminaire d’une demi-journee)');
 	end if;
 END ;
 /
@@ -42,26 +29,26 @@ BEGIN
 	where typeSeminaire = 1 and A.idSeminaire = :NEW.idSeminaire;
 	
 	if (VnbActivite2 > 6) then
-		raise_application_error(-20100,'Il y a un probleme au niveau du nombre dâ€™activites (3 activites pour un seminaire dâ€™une demi-journee)');
+		raise_application_error(-20100,'Il y a un probleme au niveau du nombre d’activites (3 activites pour un seminaire d’une demi-journee)');
 	end if;
 END ;
 /
 
---  Un dÃ©jeuner est obligatoirement prÃ©vu si un sÃ©minaire dure toute la journÃ©e
+--  Un déjeuner est obligatoirement prévu si un séminaire dure toute la journée
 
 CREATE OR REPLACE TRIGGER contrainte_3
 BEFORE insert on Seminaire
 For each row
 BEGIN
 	if(:NEW.typeSeminaire = 1 and :NEW.repas = 0) then       
-		raise_application_error(-20100,'Un dÃ©jeuner est obligatoirement prÃ©vu si le sÃ©minaire dure une journÃ©e entiÃ¨re');
+		raise_application_error(-20100,'Un déjeuner est obligatoirement prévu si le séminaire dure une journée entière');
 	end if;
 EXCEPTION
 	when others then DBMS_OUTPUT.PUT_LINE('OK'); 
 END;
 / 
 
---  Si une personne sâ€™inscrit alors que le nombre maximum de participant est atteint alors il va dans la liste dâ€™attente
+--  Si une personne s’inscrit alors que le nombre maximum de participant est atteint alors il va dans la liste d’attente
 
 CREATE OR REPLACE TRIGGER contrainte_4
 AFTER insert on Participant
@@ -84,7 +71,7 @@ BEGIN
 END;
 / 
 
--- Si un participant se dÃ©siste, le premier de la liste dâ€™attente passe en participant
+-- Si un participant se désiste, le premier de la liste d’attente passe en participant
 
 CREATE OR REPLACE TRIGGER contrainte_5
 BEFORE delete on Participant
@@ -114,7 +101,7 @@ EXCEPTION
 END ;
 /
 
--- Il ne peut pas y avoir plus de 3 sÃ©minaires le mÃªme jour
+-- Il ne peut pas y avoir plus de 3 séminaires le même jour
 CREATE OR REPLACE TRIGGER contrainte_6
 BEFORE insert on Seminaire
 For each row
@@ -131,18 +118,18 @@ end if;
 end;
 /
 
--- Un sÃ©minaire ne peut Ãªtre crÃ©Ã© que si la date du sÃ©minaire est infÃ©rieur Ã  1 mois aprÃ¨s la date actuelle.
+-- Un séminaire ne peut être créé que si la date du séminaire est inférieur à 1 mois après la date actuelle.
 CREATE OR REPLACE TRIGGER contrainte_7
 BEFORE insert or update on Seminaire
 for each row
 BEGIN
 	if (:new.dateSeminaire < add_months(sysdate,1))
-		then raise_application_error(-20100,'Un sÃ©minaire doit Ãªtre crÃ©Ã© 1 mois avant la date prÃ©vue !');
+		then raise_application_error(-20100,'Un séminaire doit être créé 1 mois avant la date prévue !');
 	end if;
 END ;
 /
 
--- Le nombre de participants doit Ãªtre fixÃ© 1 semaine avant un sÃ©minaire
+-- Le nombre de participants doit être fixé 1 semaine avant un séminaire
 CREATE OR REPLACE TRIGGER contrainte_8
 BEFORE insert on Participant
 For each row
@@ -186,9 +173,9 @@ EXCEPTION
 END;
 /
 
--- Il n'y a qu'un seul prestataire par sÃ©minaire
+-- Il n'y a qu'un seul prestataire par séminaire
 CREATE OR REPLACE TRIGGER contrainte_10
-BEFORE insert on Prestataire 2
+BEFORE insert on Prestataire 
 For each row
 DECLARE
 	VnbPrestatairesParSeminaire integer;
@@ -203,9 +190,9 @@ BEGIN
 END;
 /
 
--- Deux sÃ©minaires qui se dÃ©roulent le mÃªme jour ne peuvent pas avoir le mÃªme prestataire
+-- Deux séminaires qui se déroulent le même jour ne peuvent pas avoir le même prestataire
 CREATE OR REPLACE TRIGGER contrainte_11
-BEFORE insert on Prestataire2
+BEFORE insert on Prestataire
 For each row
 DECLARE 
 	VidPrestataire integer;
@@ -222,7 +209,7 @@ BEGIN
 END;
 /
 
---  Il n'y a qu'un animateur par sÃ©minaire
+--  Il n'y a qu'un animateur par séminaire
 CREATE OR REPLACE TRIGGER contrainte_12
 BEFORE insert on Animateur
 For each row
@@ -239,4 +226,7 @@ BEGIN
 
 END;
 /
+
+
+
 
